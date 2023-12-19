@@ -7,20 +7,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: docker login
+
+    - name: Docker login
       env:
-       DOCKER_USER: ${{secrets.DOCKER_USER}}
-       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+
     - name: Build the Docker image
-      run: docker build --tag ${{secrets.DOCKER_USER}}/hangman:latest .
-    - name: docker push
-      run: docker push ${{secrets.DOCKER_USER}}/hangman:latest
+      run: docker build --tag ${{ secrets.DOCKER_USER }}/hangman:latest .
+
+    - name: Docker push
+      run: docker push ${{ secrets.DOCKER_USER }}/hangman:latest
